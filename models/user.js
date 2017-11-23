@@ -12,8 +12,8 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, '비밀번호가 설정되어 있지 않습니다'],
-    minlength: [6, '6자리 이상이어야 합니다'],
-    maxlength: [12, '12자리 이하여야 합니다']
+    // minlength: [6, '6자리 이상이어야 합니다'],
+    // maxlength: [12, '12자리 이하여야 합니다']
   },
   name: { type: String, required: [true, '이름이 설정되어 있지 않습니다'] },
   status: { type: String, required: false },
