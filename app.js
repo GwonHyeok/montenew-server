@@ -58,6 +58,7 @@ app.use('/users', users);
 app.use('/login', require('./routes/login'));
 app.use('/me', require('./routes/me'));
 app.use('/api/v1/upload', require('./routes/upload'));
+app.use('/api/v1/searchad', require('./modules/searchAd/middleware/optionInjector'), require('./routes/searchad'));
 
 // restify
 app.use(Restify.initialize());
