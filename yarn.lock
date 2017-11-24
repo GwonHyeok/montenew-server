@@ -1189,6 +1189,12 @@ mongoose@^4.13.4:
     regexp-clone "0.0.1"
     sliced "1.0.1"
 
+"montenew-mongoose-model@file:///Users/ghyeok/WebstormProjects/montenew-mongoose-model":
+  version "1.0.0"
+  dependencies:
+    bcrypt "^1.0.3"
+    mongoose "^4.13.4"
+
 moredots@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/moredots/-/moredots-0.1.1.tgz#132713eec40a0cd8c73669757761b1495cfa26df"

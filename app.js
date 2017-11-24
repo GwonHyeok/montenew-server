@@ -6,7 +6,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const sassMiddleware = require('node-sass-middleware');
-const mongoose = require('mongoose');
+const montenewModel = require('./models');
 const passport = require('passport');
 const Restify = require('./restify');
 
@@ -20,10 +20,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // database setup
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/montenew', { useMongoClient: true })
+montenewModel.initialize();
+montenewModel.connect()
   .then(() => console.log('Successfully connected to mongodb'))
-  .catch(e => console.error(e));
+  .catch(e => {
+    throw e
+  });
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
