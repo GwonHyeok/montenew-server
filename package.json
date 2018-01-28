@@ -11,6 +11,7 @@
     "body-parser": "~1.18.2",
     "compose-middleware": "^3.0.0",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.15.5",
     "express-restify-mongoose": "^4.3.0",

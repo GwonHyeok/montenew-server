@@ -9,6 +9,7 @@ const sassMiddleware = require('node-sass-middleware');
 const montenewModel = require('./models');
 const passport = require('passport');
 const Restify = require('./restify');
+const cors = require('cors');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -40,6 +41,7 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
 // passport setup
 const AnonymousStrategy = require('passport-anonymous');
