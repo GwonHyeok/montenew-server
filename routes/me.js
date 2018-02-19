@@ -34,7 +34,13 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
     ]
   }).populate('keyword');
 
-  res.json({ meta: { count: keywordLogs.length }, data: keywordLogs });
+  const maxCount = keywordLogs.length;
+  const limit = req.query.limit || 20;
+  const page = req.query.page || 1;
+  const maxPage = ((maxCount / limit) | 0) + 1;
+
+  const results = keywordLogs.splice((limit * (page - 1)), Math.min(limit * page, keywordLogs.length));
+  res.json({ meta: { maxCount, maxPage, limit, page }, data: results });
 });
 
 module.exports = router;
