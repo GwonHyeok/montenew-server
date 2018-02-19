@@ -59,8 +59,8 @@ app.use(passport.authenticate(['bearer', 'anonymous'], { session: false }));
 // routers
 app.use('/', index);
 app.use('/users', users);
-app.use('/login', require('./routes/login'));
-app.use('/me', require('./routes/me'));
+app.use('/api/v1/login', require('./routes/login'));
+app.use('/api/v1/me', require('./routes/me'));
 app.use('/api/v1/upload', require('./routes/upload'));
 app.use('/api/v1/searchad', require('./modules/searchAd/middleware/optionInjector'), require('./routes/searchad'));
 
