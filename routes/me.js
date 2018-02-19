@@ -48,6 +48,12 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
       if (a.rank < b.rank) return -1;
       return 0;
     })
+  } else {
+    keywordLogs.sort((a, b) => {
+      if (a.keyword.type > b.keyword.type) return 1;
+      if (a.keyword.type < b.keyword.type) return -1;
+      return 0;
+    })
   }
 
   const results = keywordLogs.slice((limit * (page - 1)), Math.min(limit * page, keywordLogs.length));
