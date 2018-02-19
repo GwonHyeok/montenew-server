@@ -11,6 +11,7 @@ const needAuthenticated = require('../restify/middleware/needAuthenticated');
 const User = require('../models/user');
 const Company = require('../models/company');
 const KeyWord = require('../models/keyword');
+const KeyWordLog = require('../models/keywordLog');
 const Report = require('../models/report');
 const Solution = require('../models/solution');
 const Media = require('../models/media');
@@ -61,7 +62,18 @@ class Restify {
     });
 
     // Restify Company
-    restify.serve(router, Company, {});
+    restify.serve(router, Company, {
+      lean: false,
+      postRead: function(req, res, next) {
+
+        Company.populate(req.erm.result, {
+          path: 'keywords.logs', model: 'KeyWordLog'
+        }, (err, doc) => {
+          if (err) return next(err);
+          next();
+        })
+      }
+    });
 
     // Restify KeyWord
     restify.serve(router, KeyWord, {});
