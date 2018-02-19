@@ -40,7 +40,7 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
   const page = req.query.page || 1;
   const maxPage = ((maxCount / limit) | 0) + 1;
 
-  const results = keywordLogs.splice((limit * (page - 1)), Math.min(limit * page, keywordLogs.length));
+  const results = keywordLogs.slice((limit * (page - 1)), Math.min(limit * page, keywordLogs.length) + 1);
   res.json({ meta: { maxCount, maxPage, limit, page }, data: results });
 });
 
