@@ -12,7 +12,8 @@ router.get('/', passport.authenticate('bearer'), async (req, res) => {
       data: {
         name: req.user.name,
         username: req.user.username,
-        company: company
+        company: company,
+        authority: req.user.authority
       }
     });
   }
