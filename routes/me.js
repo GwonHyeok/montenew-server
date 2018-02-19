@@ -39,6 +39,16 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
   const limit = req.query.limit || 20;
   const page = req.query.page || 1;
   const maxPage = ((maxCount / limit) | 0) + ((maxCount % limit) ? 1 : 0);
+  const sort = req.query.sort || 'type';
+
+  // Rank 일때 정렬
+  if (sort === 'rank') {
+    keywordLogs.sort((a, b) => {
+      if (a.rank > b.rank) return 1;
+      if (a.rank < b.rank) return -1;
+      return 0;
+    })
+  }
 
   const results = keywordLogs.slice((limit * (page - 1)), Math.min(limit * page, keywordLogs.length));
   res.json({ meta: { maxCount, maxPage, limit, page }, data: results });
