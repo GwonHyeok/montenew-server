@@ -84,7 +84,7 @@ class Restify {
     restify.serve(router, Report, {
       totalCountHeader: true,
       preCreate: compose(
-        needAdmin(),
+        needAdmin,
         (req, res, next) => {
           req.body.author = req.user._id;
           next();
