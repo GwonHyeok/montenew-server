@@ -53,6 +53,12 @@ passport.use(new AnonymousStrategy());
 passport.serializeUser(require('./passport/serializeUser'));
 passport.deserializeUser(require('./passport/deserializeUser'));
 
+// 모든 통신에 x-total-count 헤더 expose 허용
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Expose-Headers', 'x-total-count');
+  next();
+});
+
 // 헤더에 토큰이 있을 경우 계정 정보 입력
 app.use(passport.authenticate(['bearer', 'anonymous'], { session: false }));
 
