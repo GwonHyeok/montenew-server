@@ -108,7 +108,7 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
     data: keywordLogs.map(log => {
       const labels = Object.values(log._id);
       if (labels.length === 4) {
-        log.label = `${labels.slice(0, 3).map(value => zeroPad(value, 2)).join('-')} ${labels[3]}:00`
+        log.label = `${labels.slice(0, 3).map(value => zeroPad(value, 2)).join('-')} ${zeroPad(labels[3], 2)}:00`
       } else {
         log.label = Object.values(log._id).map(value => zeroPad(value, 2)).join('-');
       }
