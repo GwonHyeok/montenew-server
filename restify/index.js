@@ -42,6 +42,8 @@ class Restify {
     // Restify User
     restify.serve(router, User, {
       findOneAndUpdate: false,
+      totalCountHeader: true,
+      private: ['password'],
       preUpdate: compose([
         needAuthenticated,
         (req, res, next) => {
@@ -58,7 +60,7 @@ class Restify {
 
           next()
         }
-      ])
+      ]),
     });
 
     // Restify Company
