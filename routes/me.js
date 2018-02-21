@@ -64,6 +64,15 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
 router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async (req, res) => {
   if (!req.isAuthenticated()) return res.status(401).json();
 
+  function zeroPad(num, numZeros) {
+    const n = Math.abs(num);
+    const zeros = Math.max(0, numZeros - Math.floor(n).toString().length);
+    let zeroString = Math.pow(10, zeros).toString().substr(1);
+    if (num < 0) zeroString = '-' + zeroString;
+
+    return zeroString + n;
+  }
+
   const period = req.query.period || 'hourly';
   const periods = ['monthly', 'daily', 'hourly'];
   const aggregateGroup = { year: { $year: "$createdAt" } };
@@ -99,9 +108,9 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
     data: keywordLogs.map(log => {
       const labels = Object.values(log._id);
       if (labels.length === 4) {
-        log.label = `${labels.slice(0, 3).join('-')} ${labels[3]}:00`
+        log.label = `${labels.slice(0, 3).map(value => zeroPad(value, 2)).join('-')} ${labels[3]}:00`
       } else {
-        log.label = Object.values(log._id).join('-');
+        log.label = Object.values(log._id).map(value => zeroPad(value, 2)).join('-');
       }
 
       return log
