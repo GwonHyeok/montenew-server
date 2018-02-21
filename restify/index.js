@@ -81,7 +81,9 @@ class Restify {
     restify.serve(router, KeyWord, {});
 
     // Restify Report
-    restify.serve(router, Report, {});
+    restify.serve(router, Report, {
+      totalCountHeader: true
+    });
 
     // Restify Solution
     restify.serve(router, Solution, {
