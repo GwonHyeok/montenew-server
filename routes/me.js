@@ -4,6 +4,7 @@ const passport = require('passport');
 const Company = require('../models/company');
 const Keyword = require('../models/keyword');
 const KeywordLog = require('../models/keywordLog');
+const mongoose = require('mongoose');
 
 router.get('/', passport.authenticate('bearer'), async (req, res) => {
   if (req.isAuthenticated()) {
@@ -58,6 +59,54 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
 
   const results = keywordLogs.slice((limit * (page - 1)), Math.min(limit * page, keywordLogs.length));
   res.json({ meta: { maxCount, maxPage, limit, page }, data: results });
+});
+
+router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async (req, res) => {
+  if (!req.isAuthenticated()) return res.status(401).json();
+
+  const period = req.query.period || 'hourly';
+  const periods = ['monthly', 'daily', 'hourly'];
+  const aggregateGroup = { year: { $year: "$createdAt" } };
+  const aggregateGroups = [
+    { month: { $month: "$createdAt" } },
+    { day: { $dayOfMonth: "$createdAt" } },
+    { hour: { $hour: "$createdAt" } }
+  ];
+
+  // hourly 전부
+  for (let i = 0; i <= periods.indexOf(period); i++) {
+    Object.assign(aggregateGroup, aggregateGroups[i]);
+  }
+
+  // 과거 키워드 로그
+  const keywordLogs = await KeywordLog.aggregate(
+    [
+      {
+        $match: {
+          keyword: mongoose.Types.ObjectId(req.params.keyword)
+        }
+      },
+      {
+        $group: {
+          _id: aggregateGroup,
+          rank: { $avg: "$rank" },
+        }
+      }
+    ]
+  );
+
+  res.json({
+    data: keywordLogs.map(log => {
+      const labels = Object.values(log._id);
+      if (labels.length === 4) {
+        log.label = `${labels.slice(0, 3).join('-')} ${labels[3]}:00`
+      } else {
+        log.label = Object.values(log._id).join('-');
+      }
+
+      return log
+    })
+  });
 });
 
 module.exports = router;
