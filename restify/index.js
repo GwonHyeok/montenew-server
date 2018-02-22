@@ -60,6 +60,23 @@ class Restify {
           next()
         }
       ]),
+      preDelete: compose([
+        needAuthenticated,
+        (req, res, next) => {
+
+          // 유저 정보를 업데이트 할때 권한이 있으면 모든 유저를 수정 할 수 있다
+          if (req.user.isAdmin) return next();
+
+          // 일반 유저일 경우에 자기 자신의 데이터만 수정 가능하다
+          if (req.erm.document._id !== req.user._id) {
+            const err = new Error('해당 유저의 정보를 수정할 수 있는 권한이 없습니다.');
+            err.status = 401;
+            return next(err);
+          }
+
+          next()
+        }
+      ]),
     });
 
     // Restify Company
