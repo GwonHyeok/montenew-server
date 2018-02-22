@@ -37,7 +37,7 @@ const Attachment = require('../models/attachment');
  */
 router.post('/:type',
   function(req, res, next) {
-    if (req.params.type !== 'solution') { // 타입 검증
+    if (req.params.type !== 'solution' && req.params.type !== 'report') { // 타입 검증
       const err = new Error('지원하지 않는 업로드 타입입니다');
       err.status = 403;
       return next(err)
