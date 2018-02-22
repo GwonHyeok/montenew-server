@@ -83,13 +83,29 @@ class Restify {
     restify.serve(router, Report, {
       totalCountHeader: true,
       findOneAndRemove: false,
-      preCreate: compose(
+      preCreate: compose([
         needAdmin,
         (req, res, next) => {
           req.body.author = req.user._id;
           next();
         }
-      ),
+      ]),
+      preUpdate: compose([
+        needAdmin
+      ]),
+      preDelete: compose([
+        needAdmin,
+        (req, res, next) => {
+          Company.findById(req.erm.document.company)
+            .then(company => {
+              const index = company.reports.indexOf(req.erm.document._id);
+              if (index !== -1) company.reports.splice(index, 1);
+              return company.save()
+            })
+            .then(_ => next())
+            .catch(next)
+        }
+      ]),
       postCreate: compose(
         (req, res, next) => {
           Company.findById(req.erm.result.company)
@@ -100,17 +116,7 @@ class Restify {
             .then(company => next())
             .catch(next)
         }
-      ),
-      preDelete: (req, res, next) => {
-        Company.findById(req.erm.document.company)
-          .then(company => {
-            const index = company.reports.indexOf(req.erm.document._id);
-            if (index !== -1) company.reports.splice(index, 1);
-            return company.save()
-          })
-          .then(_ => next())
-          .catch(next)
-      }
+      )
     });
 
     // Restify Solution
