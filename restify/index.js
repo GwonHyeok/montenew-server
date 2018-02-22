@@ -43,7 +43,6 @@ class Restify {
     restify.serve(router, User, {
       findOneAndUpdate: false,
       totalCountHeader: true,
-      private: ['password'],
       preUpdate: compose([
         needAuthenticated,
         (req, res, next) => {
