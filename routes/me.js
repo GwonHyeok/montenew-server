@@ -77,9 +77,9 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
   const periods = ['monthly', 'daily', 'hourly'];
   const aggregateGroup = { year: { $year: "$createdAt" } };
   const aggregateGroups = [
-    { month: { $month: "$createdAt" } },
-    { day: { $dayOfMonth: "$createdAt" } },
-    { hour: { $hour: "$createdAt" } }
+    { month: { $month: { date: "$createdAt", timezone: 'Asia/Seoul' } } },
+    { day: { $dayOfMonth: { date: "$createdAt", timezone: 'Asia/Seoul' } } },
+    { hour: { $hour: { date: "$createdAt", timezone: 'Asia/Seoul' } } }
   ];
 
   // hourly 전부
