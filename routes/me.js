@@ -95,13 +95,13 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
           keyword: mongoose.Types.ObjectId(req.params.keyword)
         }
       },
-      { $sort: { createdAt: -1 } },
       {
         $group: {
           _id: aggregateGroup,
           rank: { $avg: "$rank" },
         }
-      }
+      },
+      { $sort: { createdAt: -1 } }
     ]
   );
 
