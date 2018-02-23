@@ -3,6 +3,8 @@ const router = express.Router();
 const passport = require('passport');
 const Company = require('../models/company');
 const Keyword = require('../models/keyword');
+const Media = require('../models/media');
+const MediaLog = require('../models/mediaLog');
 const KeywordLog = require('../models/keywordLog');
 const mongoose = require('mongoose');
 
@@ -122,6 +124,50 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
       return log
     })
   });
+});
+
+router.get('/mediaChart', passport.authenticate('bearer'), async (req, res) => {
+  if (!req.isAuthenticated()) return res.status(401).json();
+
+  const response = [];
+  const medias = await Media.find({});
+
+  for (let i = 0; i < medias.length; i++) {
+    const media = medias[i];
+    const logs = await MediaLog.find({ media: media._id });
+
+    // 조회수
+    const viewCounts = logs.map(log => {
+      return { value: log.viewCount, label: log.createdAt }
+    });
+
+    // 좋아요수
+    const likeCounts = logs.map(log => {
+      return { value: log.likeCount, label: log.createdAt }
+    });
+
+    response.push({
+      media,
+      logs: [
+        {
+          title: '페이지 조회',
+          duration: '12월 25일 ~ 01월 25일',
+          latest: 3680,
+          latestDescription: '총 페이지 조회수',
+          data: viewCounts
+        },
+        {
+          title: '좋아요 수',
+          duration: '12월 25일 ~ 01월 25일',
+          latest: 1800,
+          latestDescription: '총 페이지 좋아요',
+          data: likeCounts
+        }
+      ]
+    });
+  }
+
+  res.status(200).json({ data: response });
 });
 
 module.exports = router;

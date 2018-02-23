@@ -15,6 +15,7 @@ const KeyWordLog = require('../models/keywordLog');
 const Report = require('../models/report');
 const Solution = require('../models/solution');
 const Media = require('../models/media');
+const MediaLog = require('../models/mediaLog');
 
 class Restify {
 
@@ -160,6 +161,7 @@ class Restify {
 
     // Restify Solution
     restify.serve(router, Media, {});
+    restify.serve(router, MediaLog, {});
 
     return router;
   }
