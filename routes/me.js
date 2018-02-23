@@ -101,7 +101,12 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
           rank: { $avg: "$rank" },
         }
       },
-      { $sort: { createdAt: -1 } }
+      {
+        $sort: Object.keys(aggregateGroup).reduce((previousValue, currentValue) => {
+          previousValue[`_id.${currentValue}`] = -1;
+          return previousValue
+        }, {})
+      }
     ]
   );
 
