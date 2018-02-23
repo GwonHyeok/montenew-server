@@ -26,15 +26,15 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
   if (!req.isAuthenticated()) return res.status(401).json();
 
   const company = await Company.findById(req.user.company);
-  const keywordLogs = await KeywordLog.find({
-    $and: [
-      {
-        $or: company.keywords.map(keyword => {
-          return { keyword: keyword }
-        })
-      },
-    ]
-  }).populate('keyword');
+  const keywordLogs = [];
+
+  for (let i = 0; i < company.keywords.length; i++) {
+    const keywordId = company.keywords[i];
+    const keywordLog = await KeywordLog.findOne({
+      keyword: keywordId
+    }).sort({ createdAt: -1 }).populate('keyword');
+    if (keywordLog) keywordLogs.push(keywordLog);
+  }
 
   const maxCount = keywordLogs.length;
   const limit = req.query.limit || 20;
