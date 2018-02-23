@@ -27,11 +27,19 @@ router.get('/', passport.authenticate('bearer'), async (req, res) => {
 router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => {
   if (!req.isAuthenticated()) return res.status(401).json();
 
-  const company = await Company.findById(req.user.company);
+  const keywords = [];
   const keywordLogs = [];
 
-  for (let i = 0; i < company.keywords.length; i++) {
-    const keywordId = company.keywords[i];
+  // 관리자 일 경우 모든 키워드 정보 추가
+  if (req.user.isAdmin) {
+    keywords.push(...(await Keyword.find({})).map(keyword => keyword._id));
+  } else {
+    const company = await Company.findById(req.user.company);
+    keywords.push(...company.keywords);
+  }
+
+  for (let i = 0; i < keywords.length; i++) {
+    const keywordId = keywords[i];
     const keywordLog = await KeywordLog.findOne({
       keyword: keywordId
     }).sort({ createdAt: -1 }).populate('keyword');
