@@ -103,7 +103,7 @@ router.get('/keywordLogs/:keyword/chart', passport.authenticate('bearer'), async
       },
       {
         $sort: Object.keys(aggregateGroup).reduce((previousValue, currentValue) => {
-          previousValue[`_id.${currentValue}`] = -1;
+          previousValue[`_id.${currentValue}`] = 1;
           return previousValue
         }, {})
       }
