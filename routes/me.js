@@ -163,7 +163,9 @@ router.get('/mediaChart', passport.authenticate('bearer'), async (req, res) => {
           latestDescription: '총 페이지 좋아요',
           data: likeCounts
         }
-      ]
+      ],
+      durationLabel: '2017년 12월 25일 ~ 2018년 01월 25일의 결과',
+      excelUri: 'http://hello.world'
     });
   }
 
