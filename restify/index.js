@@ -166,6 +166,7 @@ class Restify {
 
     // Feedback
     restify.serve(router, Feedback, {
+      totalCountHeader: true,
       preCreate: compose([
         needAdmin,
         (req, res, next) => {
