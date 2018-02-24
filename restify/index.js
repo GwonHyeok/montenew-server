@@ -80,6 +80,17 @@ class Restify {
           next()
         }
       ]),
+      postRead: compose([
+        (req, res, next) => {
+          Feedback.populate(req.erm.result,
+            [
+              { path: 'company.manager', model: 'User', select: '_id name contact' },
+            ], (err, doc) => {
+              if (err) return next(err);
+              next();
+            });
+        }
+      ])
     });
 
     // Restify Company
