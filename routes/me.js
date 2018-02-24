@@ -13,6 +13,7 @@ router.get('/', passport.authenticate('bearer'), async (req, res) => {
     const company = await Company.findById(req.user.company);
     return res.status(200).json({
       data: {
+        _id: req.user._id,
         name: req.user.name,
         username: req.user.username,
         company: company,
