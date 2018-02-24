@@ -163,7 +163,17 @@ class Restify {
     // Restify Solution
     restify.serve(router, Media, {});
     restify.serve(router, MediaLog, {});
-    restify.serve(router, Feedback, {});
+
+    // Feedback
+    restify.serve(router, Feedback, {
+      preCreate: compose([
+        needAdmin,
+        (req, res, next) => {
+          req.body.author = req.user._id;
+          next();
+        }
+      ])
+    });
 
     return router;
   }
