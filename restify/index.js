@@ -171,6 +171,12 @@ class Restify {
         needAuthenticated,
         (req, res, next) => {
           req.body.author = req.user._id;
+
+          // 일반 유저이고, 회사 정보가 없을 경우에 피드백 글에 자기 회사 정보를 추가한다
+          if (!req.user.isAdmin && !req.body.company) {
+            req.body.company = req.user.company
+          }
+
           next();
         }
       ])
