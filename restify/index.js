@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const restify = require('express-restify-mongoose');
 const compose = require('compose-middleware').compose;
+const util = require('util');
 
 // Middleware
 const needAdmin = require('../restify/middleware/needAdmin');
@@ -177,6 +178,19 @@ class Restify {
             req.body.company = req.user.company
           }
 
+          next();
+        }
+      ]),
+      postRead: compose([
+        (req, res, next) => {
+          if (util.isArray(req.erm.result)) {
+            req.erm.result.map(feedback => {
+              if (util.isObject(feedback.author)) delete feedback.author.password;
+              return feedback;
+            })
+          } else {
+            if (util.isObject(req.erm.result.author)) delete req.erm.result.author.password;
+          }
           next();
         }
       ])
