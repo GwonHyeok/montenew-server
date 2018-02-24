@@ -206,7 +206,7 @@ class Restify {
         (req, res, next) => {
           Feedback.populate(req.erm.result,
             [
-              { path: 'company.manager', model: 'User' },
+              { path: 'company.manager', model: 'User', select: '_id name contact' },
             ], (err, doc) => {
               if (err) return next(err);
               next();
