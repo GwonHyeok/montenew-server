@@ -45,7 +45,7 @@ router.get('/keywordLogs', passport.authenticate('bearer'), async (req, res) => 
       keyword: keywordId
     }).sort({ createdAt: -1 }).populate('keyword');
     if (keywordLog) keywordLogs.push(keywordLog);
-    else keywordLogs.push({ rank: 99999, keyword: keywordId })
+    else keywordLogs.push({ rank: 99999, keyword: (await Keyword.findById(keywordId)) })
   }
 
   const maxCount = keywordLogs.length;
