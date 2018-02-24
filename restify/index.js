@@ -181,6 +181,11 @@ class Restify {
     // Feedback
     restify.serve(router, Feedback, {
       totalCountHeader: true,
+      contextFilter: (model, req, done) => {
+        if (req.user.isAdmin) return done(model.find({}));
+
+        done(model.find({ company: req.user.company }))
+      },
       preCreate: compose([
         needAuthenticated,
         (req, res, next) => {
