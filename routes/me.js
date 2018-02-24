@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 
 router.get('/', passport.authenticate('bearer'), async (req, res) => {
   if (req.isAuthenticated()) {
-    const company = await Company.findById(req.user.company);
+    const company = await Company.findById(req.user.company).populate('manager');
     return res.status(200).json({
       data: {
         _id: req.user._id,
