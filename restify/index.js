@@ -186,6 +186,9 @@ class Restify {
 
         done(model.find({ company: req.user.company }))
       },
+      preRead: compose([
+        needAuthenticated
+      ]),
       preCreate: compose([
         needAuthenticated,
         (req, res, next) => {
@@ -200,6 +203,15 @@ class Restify {
         }
       ]),
       postRead: compose([
+        (req, res, next) => {
+          Feedback.populate(req.erm.result,
+            [
+              { path: 'company.manager', model: 'User' },
+            ], (err, doc) => {
+              if (err) return next(err);
+              next();
+            });
+        },
         (req, res, next) => {
           if (util.isArray(req.erm.result)) {
             req.erm.result.map(feedback => {
