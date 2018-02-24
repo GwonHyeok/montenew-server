@@ -144,7 +144,20 @@ class Restify {
             .then(company => next())
             .catch(next)
         }
-      )
+      ),
+      postRead: compose([
+        (req, res, next) => {
+          if (util.isArray(req.erm.result)) {
+            req.erm.result.map(feedback => {
+              if (util.isObject(feedback.author)) delete feedback.author.password;
+              return feedback;
+            })
+          } else {
+            if (util.isObject(req.erm.result.author)) delete req.erm.result.author.password;
+          }
+          next();
+        }
+      ])
     });
 
     // Restify Solution
